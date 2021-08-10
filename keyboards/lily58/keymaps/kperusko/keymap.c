@@ -1,4 +1,5 @@
 #include QMK_KEYBOARD_H
+#include <stdio.h>
 
 #define KC_LCAG (LCTL(LALT(LGUI(KC_NO))))
 
@@ -135,7 +136,6 @@ oled_rotation_t oled_init_user(oled_rotation_t rotation) {
 }
 
 // When you add source files to SRC in rules.mk, you can use functions.
-const char *read_layer_state(void);
 const char *read_logo(void);
 void set_keylog(uint16_t keycode, keyrecord_t *record);
 const char *read_keylog(void);
@@ -144,7 +144,42 @@ const char *read_keylogs(void);
 // const char *read_mode_icon(bool swap);
 // const char *read_host_led_state(void);
 // void set_timelog(void);
-// const char *read_timelog(void);
+// const char *read_timelog(void);  
+
+#define L_BASE 0
+#define L_LOWER (1 << 1)
+#define L_RAISE (1 << 2)
+#define L_ADJUST (1 << 3)
+#define L_MOUSE (1 << 4)
+#define L_MOUSE_TRI (L_MOUSE | L_RAISE | L_LOWER)
+
+char layer_state_str[24];
+
+const char *read_layer_state(void) {
+  switch (layer_state)
+  {
+  case L_BASE:
+    snprintf(layer_state_str, sizeof(layer_state_str), "Layer: Default");
+    break;
+  case L_RAISE:
+    snprintf(layer_state_str, sizeof(layer_state_str), "Layer: Raise");
+    break;
+  case L_LOWER:
+    snprintf(layer_state_str, sizeof(layer_state_str), "Layer: Lower");
+    break;
+  case L_ADJUST:
+    snprintf(layer_state_str, sizeof(layer_state_str), "Layer: Adjust");
+    break;
+  case L_MOUSE:
+  case L_MOUSE_TRI:
+    snprintf(layer_state_str, sizeof(layer_state_str), "Layer: Mouse");
+    break;
+  default:
+    snprintf(layer_state_str, sizeof(layer_state_str), "Layer: Undef-%ld", layer_state);
+  }
+
+  return layer_state_str;
+}
 
 void oled_task_user(void) {
   if (is_keyboard_master()) {
