@@ -84,6 +84,8 @@ enum custom_keycodes {
 };
 
 #define KC_LCAG (LCTL(LALT(LGUI(KC_NO))))
+#define KC_Z_MUTE (LSG(KC_A))
+
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /*
@@ -109,9 +111,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|------+-------+--------+--------+--------+------|                   |--------+-------+--------+--------+--------+---------|
   KC_LCTL,  KC_A,   KC_S,    KC_D,    KC_F,    KC_G,                      KC_H,    KC_J,   KC_K,    KC_L,    KC_SCLN, KC_QUOT,
   //|------+-------+--------+--------+--------+------|  ===  |   |  ===  |--------+-------+--------+--------+--------+---------|
-  KC_LSFT,  KC_Z,   KC_X,    KC_C,    KC_V,    KC_B,  KC_MUTE,  KC_D_MUTE,KC_N,    KC_M,   KC_COMM, KC_DOT,  KC_SLSH, KC_ENT,
+  KC_LSFT,  KC_Z,   KC_X,    KC_C,    KC_V,    KC_B,  KC_MUTE,  KC_Z_MUTE,KC_N,    KC_M,   KC_COMM, KC_DOT,  KC_SLSH, KC_ENT,
   //|------+-------+--------+--------+--------+------|  ===  |   |  ===  |--------+-------+--------+--------+--------+---------|
-                 KC_BSPC, KC_LOPT, KC_LGUI, KC_ENT,  KC_LOWER,MO(_RAISE), KC_SPC, KC_BSPC, KC_RCTL, KC_ENT
+                 KC_LCAG, KC_LOPT, KC_LGUI, KC_ENT,  KC_LOWER,MO(_RAISE), KC_SPC, KC_BSPC, KC_RCTL, KC_ENT
   //            \--------+--------+--------+---------+-------|   |--------+---------+--------+---------+-------/
 ),
 
@@ -125,8 +127,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------+------|  MUTE |    |       |------+------+------+------+------+------|
  * |      |  =   |  -   |  +   |   {  |   }  |-------|    |-------|   [  |   ]  |   ;  |   :  |   \  |   \  |
  * `-----------------------------------------/       /     \      \-----------------------------------------'
- *            | Bspc | LOpt | LGUI | Enter| /LOWER  /       \RAISE \  |SPACE |BackSP| RCTR |Enter |
- *            |      |      |      |      |/       /         \      \ |      |      |      |      |
+ *            |CTRL+ | LOpt | LGUI | Enter| /LOWER  /       \RAISE \  |SPACE |BackSP| RCTR |Enter |
+ *            |GUI+ALT|      |      |      |/       /         \      \ |      |      |      |      |
  *            `----------------------------------'           '------''---------------------------'
  */
 [_LOWER] = LAYOUT(
@@ -439,14 +441,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 layer_off(_ADJUST);
             }
             return false;
-        case KC_D_MUTE:
-            if (record->event.pressed) {
-                register_mods(mod_config(MOD_MEH));
-                register_code(KC_UP);
-            } else {
-                unregister_mods(mod_config(MOD_MEH));
-                unregister_code(KC_UP);
-            }
     }
     return true;
 }
